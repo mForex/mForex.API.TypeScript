@@ -10,7 +10,7 @@ module mForex {
         private hbIntervalHandle: number;
 
         public onOpen: () => void;
-        public onClose: () => void;
+        public onClose: (ev: CloseEvent) => void;
 
         public onTicks: (ticks: Tick[]) => void;
         public onMarginLevel: (marginLevel: MarginLevel) => void;
@@ -19,17 +19,18 @@ module mForex {
         private lastReqId: number;
         private futures: JQueryDeferred<any>[];
 
-        constructor(real: boolean) {
+        constructor(server: ServerType) {
             if (!("WebSocket" in window)) {
                 throw "No Web Socket support";
             }
 
             this.lastReqId = 0;
-            this.isReal = real;
+            this.isReal = server === ServerType.Real;
             this.futures = new Array();
 
-            this.endpoint = this.isReal ? "wss://127.0.0.1:6616/"
-            : "ws://127.0.0.1:5616/";
+            this.endpoint = this.isReal
+            ? "wss://real.api.mforex.pl/"
+            : "wss://demo.api.mforex.pl/";
         }
 
         open() {
@@ -41,10 +42,10 @@ module mForex {
                 this.onOpen();
             }
 
-            this.socket.onclose = () =>
+            this.socket.onclose = (ev: CloseEvent) =>
             {
                 clearInterval(this.hbIntervalHandle);
-                this.onClose();
+                this.onClose(ev);
             }
 
             this.socket.onmessage = (msg: any) => {
@@ -239,6 +240,11 @@ module mForex {
 
             return def.promise();
         }
+    }
+
+    export enum ServerType {
+        Demo = 0,
+        Real = 1
     }
 
     /** Errors **/

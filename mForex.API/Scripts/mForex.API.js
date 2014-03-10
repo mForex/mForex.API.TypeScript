@@ -2,16 +2,16 @@
 var mForex;
 (function (mForex) {
     var Connection = (function () {
-        function Connection(real) {
+        function Connection(server) {
             if (!("WebSocket" in window)) {
                 throw "No Web Socket support";
             }
 
             this.lastReqId = 0;
-            this.isReal = real;
+            this.isReal = server === 1 /* Real */;
             this.futures = new Array();
 
-            this.endpoint = this.isReal ? "wss://127.0.0.1:6616/" : "ws://127.0.0.1:5616/";
+            this.endpoint = this.isReal ? "wss://real.api.mforex.pl/" : "wss://demo.api.mforex.pl/";
         }
         Connection.prototype.open = function () {
             var _this = this;
@@ -24,9 +24,9 @@ var mForex;
                 _this.onOpen();
             };
 
-            this.socket.onclose = function () {
+            this.socket.onclose = function (ev) {
                 clearInterval(_this.hbIntervalHandle);
-                _this.onClose();
+                _this.onClose(ev);
             };
 
             this.socket.onmessage = function (msg) {
@@ -220,6 +220,12 @@ var mForex;
         return Connection;
     })();
     mForex.Connection = Connection;
+
+    (function (ServerType) {
+        ServerType[ServerType["Demo"] = 0] = "Demo";
+        ServerType[ServerType["Real"] = 1] = "Real";
+    })(mForex.ServerType || (mForex.ServerType = {}));
+    var ServerType = mForex.ServerType;
 
     /** Errors **/
     var TradeError = (function () {
@@ -473,4 +479,3 @@ var mForex;
     })();
     mForex.SessionSchedule = SessionSchedule;
 })(mForex || (mForex = {}));
-//# sourceMappingURL=mForex.API.js.map
