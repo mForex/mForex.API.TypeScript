@@ -454,6 +454,14 @@ module mForex {
         public low: number;
         public high: number;
         public time: Date;
+
+        public trade: boolean;
+        public lotMin: number;
+        public lotMax: number;
+        public lotStep: number;
+        public commission: number;
+        public commissionType: CommissionType;
+        public commissionLots: CommissionLots;
     }
 
     export enum ProfitCalcMode {
@@ -483,6 +491,17 @@ module mForex {
         Full = 2
     }
 
+    export enum CommissionType {
+        Money = 0,
+        Pips = 1,
+        Percent = 2
+    }
+
+    export enum CommissionLots {
+        PerLot = 0,
+        PerDeal = 1
+    }
+
     /** Other data **/
     export class LoginResponse {
         public login: number;
@@ -507,6 +526,7 @@ module mForex {
     export class HeartbeatResponse {
     }
 
+    /** Session data **/
     export enum DayOfWeek {
         Sunday = 0,
         Monday = 1,

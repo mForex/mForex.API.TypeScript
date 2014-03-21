@@ -422,6 +422,19 @@ var mForex;
     })(mForex.TradeMode || (mForex.TradeMode = {}));
     var TradeMode = mForex.TradeMode;
 
+    (function (CommissionType) {
+        CommissionType[CommissionType["Money"] = 0] = "Money";
+        CommissionType[CommissionType["Pips"] = 1] = "Pips";
+        CommissionType[CommissionType["Percent"] = 2] = "Percent";
+    })(mForex.CommissionType || (mForex.CommissionType = {}));
+    var CommissionType = mForex.CommissionType;
+
+    (function (CommissionLots) {
+        CommissionLots[CommissionLots["PerLot"] = 0] = "PerLot";
+        CommissionLots[CommissionLots["PerDeal"] = 1] = "PerDeal";
+    })(mForex.CommissionLots || (mForex.CommissionLots = {}));
+    var CommissionLots = mForex.CommissionLots;
+
     /** Other data **/
     var LoginResponse = (function () {
         function LoginResponse(login, success) {
@@ -446,6 +459,7 @@ var mForex;
     })();
     mForex.HeartbeatResponse = HeartbeatResponse;
 
+    /** Session data **/
     (function (DayOfWeek) {
         DayOfWeek[DayOfWeek["Sunday"] = 0] = "Sunday";
         DayOfWeek[DayOfWeek["Monday"] = 1] = "Monday";
@@ -479,3 +493,4 @@ var mForex;
     })();
     mForex.SessionSchedule = SessionSchedule;
 })(mForex || (mForex = {}));
+//# sourceMappingURL=mForex.API.js.map
