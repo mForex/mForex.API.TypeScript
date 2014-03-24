@@ -3,6 +3,7 @@ var mForex;
 (function (mForex) {
     var Connection = (function () {
         function Connection(server) {
+            this.protocolVersion = 2;
             if (!("WebSocket" in window)) {
                 throw "No Web Socket support";
             }
@@ -99,7 +100,7 @@ var mForex;
         };
 
         Connection.prototype.login = function (login, password) {
-            return this.sendAndCacheFuture({ type: "login", requestId: 0, login: login, password: password });
+            return this.sendAndCacheFuture({ type: "login", requestId: 0, login: login, password: password, protocolVersion: this.protocolVersion });
         };
 
         Connection.prototype.requestChart = function (symbol, period, from, to) {

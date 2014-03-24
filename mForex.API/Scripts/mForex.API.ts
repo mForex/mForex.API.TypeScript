@@ -9,6 +9,8 @@ module mForex {
 
         private hbIntervalHandle: number;
 
+        private protocolVersion: number = 2;
+
         public onOpen: () => void;
         public onClose: (ev: CloseEvent) => void;
 
@@ -105,7 +107,7 @@ module mForex {
         }
 
         public login(login: number, password: string): JQueryPromise<LoginResponse> {
-            return this.sendAndCacheFuture({ type: "login", requestId: 0, login: login, password: password });
+            return this.sendAndCacheFuture({ type: "login", requestId: 0, login: login, password: password, protocolVersion: this.protocolVersion });
         }
 
         public requestChart(symbol: string, period: CandlePeriod, from: Date, to: Date)
