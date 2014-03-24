@@ -9,7 +9,8 @@ module mForex {
 
         private hbIntervalHandle: number;
 
-        private protocolVersion: number = 2;
+        private majorProtocolVersion: number = 0;
+        private minorProtocolVersion: number = 97;
 
         public onOpen: () => void;
         public onClose: (ev: CloseEvent) => void;
@@ -94,6 +95,8 @@ module mForex {
                         } else if (packet.type === "accountSettings") {
                             this.resolvePacket(fut, packet,
                                 p => p.settings);
+                        } else if (packet.type === "tickRegistration") {
+                            this.resolvePacket(fut, packet, p => 0);
                         }
                     }
 
@@ -107,7 +110,11 @@ module mForex {
         }
 
         public login(login: number, password: string): JQueryPromise<LoginResponse> {
-            return this.sendAndCacheFuture({ type: "login", requestId: 0, login: login, password: password, protocolVersion: this.protocolVersion });
+            return this.sendAndCacheFuture({
+                type: "login", requestId: 0, login: login, password: password,
+                majorProtocolVersion: this.majorProtocolVersion,
+                minorProtocolVersion: this.minorProtocolVersion
+            });
         }
 
         public requestChart(symbol: string, period: CandlePeriod, from: Date, to: Date)
@@ -138,6 +145,14 @@ module mForex {
         public requestSessionSchedule(symbol: string)
             : JQueryPromise<SessionSchedule> {
             return this.sendAndCacheFuture({ type: "sessionSchedule", requestId: 0, symbol: symbol });
+        }
+
+        public requestTickRegistration(symbol: string, action: RegistrationAction)
+            : JQueryPromise<void> {
+                return this.sendAndCacheFuture({
+                    type: "tickRegistration", requestId: 0,
+                    symbol: symbol, registrationAction: action
+                });
         }
 
         public requestOpenOrder(symbol: string, tradeCommand: TradeCommand,
@@ -447,6 +462,11 @@ module mForex {
         }
     }
 
+    export enum RegistrationAction {
+        Unregister = 0,
+        Register = 1,
+    }
+
 
     /** Instrument data **/
     export class InstrumentSettings {
@@ -534,6 +554,7 @@ module mForex {
         InvalidProtocolVersion = 3,
     }
 
+    
     export class MarginLevel {
         public login: number;
         public balance: number;

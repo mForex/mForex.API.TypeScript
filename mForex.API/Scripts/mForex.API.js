@@ -3,7 +3,8 @@ var mForex;
 (function (mForex) {
     var Connection = (function () {
         function Connection(server) {
-            this.protocolVersion = 2;
+            this.majorProtocolVersion = 0;
+            this.minorProtocolVersion = 97;
             if (!("WebSocket" in window)) {
                 throw "No Web Socket support";
             }
@@ -87,6 +88,10 @@ var mForex;
                             _this.resolvePacket(fut, packet, function (p) {
                                 return p.settings;
                             });
+                        } else if (packet.type === "tickRegistration") {
+                            _this.resolvePacket(fut, packet, function (p) {
+                                return 0;
+                            });
                         }
                     }
 
@@ -100,7 +105,11 @@ var mForex;
         };
 
         Connection.prototype.login = function (login, password) {
-            return this.sendAndCacheFuture({ type: "login", requestId: 0, login: login, password: password, protocolVersion: this.protocolVersion });
+            return this.sendAndCacheFuture({
+                type: "login", requestId: 0, login: login, password: password,
+                majorProtocolVersion: this.majorProtocolVersion,
+                minorProtocolVersion: this.minorProtocolVersion
+            });
         };
 
         Connection.prototype.requestChart = function (symbol, period, from, to) {
@@ -125,6 +134,13 @@ var mForex;
 
         Connection.prototype.requestSessionSchedule = function (symbol) {
             return this.sendAndCacheFuture({ type: "sessionSchedule", requestId: 0, symbol: symbol });
+        };
+
+        Connection.prototype.requestTickRegistration = function (symbol, action) {
+            return this.sendAndCacheFuture({
+                type: "tickRegistration", requestId: 0,
+                symbol: symbol, registrationAction: action
+            });
         };
 
         Connection.prototype.requestOpenOrder = function (symbol, tradeCommand, stopLoss, takeProfit, volume, comment) {
@@ -394,6 +410,12 @@ var mForex;
         return ConvRate;
     })();
     mForex.ConvRate = ConvRate;
+
+    (function (RegistrationAction) {
+        RegistrationAction[RegistrationAction["Unregister"] = 0] = "Unregister";
+        RegistrationAction[RegistrationAction["Register"] = 1] = "Register";
+    })(mForex.RegistrationAction || (mForex.RegistrationAction = {}));
+    var RegistrationAction = mForex.RegistrationAction;
 
     /** Instrument data **/
     var InstrumentSettings = (function () {
