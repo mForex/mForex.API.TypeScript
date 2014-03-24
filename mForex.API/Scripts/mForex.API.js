@@ -51,7 +51,7 @@ var mForex;
                         _this.futures[packet.requestId] = null;
 
                         if (packet.type === "login") {
-                            fut.resolve(new LoginResponse(packet.login, packet.loggedIn));
+                            fut.resolve(new LoginResponse(packet.login, packet.loginStatus));
                         } else if (packet.type === "candles") {
                             _this.resolvePacket(fut, packet, function (p) {
                                 return p;
@@ -449,13 +449,21 @@ var mForex;
 
     /** Other data **/
     var LoginResponse = (function () {
-        function LoginResponse(login, success) {
+        function LoginResponse(login, loginStatus) {
             this.login = login;
-            this.success = success;
+            this.loginStatus = loginStatus;
         }
         return LoginResponse;
     })();
     mForex.LoginResponse = LoginResponse;
+
+    (function (LoginStatus) {
+        LoginStatus[LoginStatus["Successful"] = 0] = "Successful";
+        LoginStatus[LoginStatus["InvalidPassword"] = 1] = "InvalidPassword";
+        LoginStatus[LoginStatus["ApiNotEnabled"] = 2] = "ApiNotEnabled";
+        LoginStatus[LoginStatus["InvalidProtocolVersion"] = 3] = "InvalidProtocolVersion";
+    })(mForex.LoginStatus || (mForex.LoginStatus = {}));
+    var LoginStatus = mForex.LoginStatus;
 
     var MarginLevel = (function () {
         function MarginLevel() {

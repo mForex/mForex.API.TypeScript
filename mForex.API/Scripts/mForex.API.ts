@@ -71,7 +71,7 @@ module mForex {
                         this.futures[packet.requestId] = null;
 
                         if (packet.type === "login") {
-                            fut.resolve(new LoginResponse(packet.login, packet.loggedIn));
+                            fut.resolve(new LoginResponse(packet.login, packet.loginStatus));
                         } else if (packet.type === "candles") {
                             this.resolvePacket(fut, packet, p => p);
                         } else if (packet.type === "instrSettings") {
@@ -518,12 +518,20 @@ module mForex {
     /** Other data **/
     export class LoginResponse {
         public login: number;
-        public success: boolean;
+        public loginStatus: LoginStatus;
 
-        constructor(login: number, success: boolean) {
+        constructor(login: number, loginStatus: LoginStatus) {
             this.login = login;
-            this.success = success;
+            this.loginStatus = loginStatus;
         }
+    }
+
+    export enum LoginStatus
+    {
+        Successful = 0,
+        InvalidPassword = 1,
+        ApiNotEnabled = 2,
+        InvalidProtocolVersion = 3,
     }
 
     export class MarginLevel {
