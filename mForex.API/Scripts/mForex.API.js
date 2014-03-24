@@ -82,6 +82,10 @@ var mForex;
                             _this.resolvePacket(fut, packet, function (p) {
                                 return new SessionSchedule(p.sessions);
                             });
+                        } else if (packet.type === "accountSettings") {
+                            _this.resolvePacket(fut, packet, function (p) {
+                                return p.settings;
+                            });
                         }
                     }
 
@@ -187,6 +191,13 @@ var mForex;
                 order: order,
                 comment: "",
                 expiration: new Date("1970-01-01")
+            });
+        };
+
+        Connection.prototype.requestAccountSettings = function () {
+            return this.sendAndCacheFuture({
+                type: "accountSettings",
+                requestId: 0
             });
         };
 
@@ -492,5 +503,34 @@ var mForex;
         return SessionSchedule;
     })();
     mForex.SessionSchedule = SessionSchedule;
+
+    /** User Settings **/
+    var AccountSettings = (function () {
+        function AccountSettings() {
+        }
+        return AccountSettings;
+    })();
+    mForex.AccountSettings = AccountSettings;
+
+    (function (MarginMode) {
+        MarginMode[MarginMode["DontUse"] = 0] = "DontUse";
+        MarginMode[MarginMode["UseAll"] = 1] = "UseAll";
+        MarginMode[MarginMode["UseProfit"] = 2] = "UseProfit";
+        MarginMode[MarginMode["UseLoss"] = 3] = "UseLoss";
+    })(mForex.MarginMode || (mForex.MarginMode = {}));
+    var MarginMode = mForex.MarginMode;
+
+    (function (MarginType) {
+        MarginType[MarginType["Percent"] = 0] = "Percent";
+        MarginType[MarginType["Currency"] = 1] = "Currency";
+    })(mForex.MarginType || (mForex.MarginType = {}));
+    var MarginType = mForex.MarginType;
+
+    (function (AccountType) {
+        AccountType[AccountType["Mini"] = 0] = "Mini";
+        AccountType[AccountType["Standard"] = 1] = "Standard";
+        AccountType[AccountType["Vip"] = 2] = "Vip";
+    })(mForex.AccountType || (mForex.AccountType = {}));
+    var AccountType = mForex.AccountType;
 })(mForex || (mForex = {}));
 //# sourceMappingURL=mForex.API.js.map

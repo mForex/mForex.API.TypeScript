@@ -85,10 +85,13 @@ module mForex {
                                 p => new TradeResponse(p.order),
                                 p => new TradeError(p.order, p.ec, p.tradeEc));
                         } else if (packet.type === "heartbeat") {
-                            
+
                         } else if (packet.type === "sessionSchedule") {
                             this.resolvePacket(fut, packet,
                                 p => new SessionSchedule(p.sessions));
+                        } else if (packet.type === "accountSettings") {
+                            this.resolvePacket(fut, packet,
+                                p => p.settings);
                         }
                     }
 
@@ -207,6 +210,14 @@ module mForex {
                 order: order,
                 comment: "",
                 expiration: new Date("1970-01-01")
+            });
+        }
+
+        public requestAccountSettings()
+            : JQueryPromise<AccountSettings> {
+                return this.sendAndCacheFuture({
+                    type: "accountSettings",
+                    requestId: 0,
             });
         }
 
@@ -553,5 +564,37 @@ module mForex {
         constructor(dailySessions: DailySession[]) {
             this.dailySessions = dailySessions;
         }
+    }
+
+    /** User Settings **/
+
+    export class AccountSettings {
+        public name: string;
+        public leverage: number;
+        public interestRate: number;
+        public marginCall: number;
+        public marginStopOut: number;
+        public marginMode: MarginMode;
+        public marginType: MarginType;
+        public accountType: AccountType;
+    }
+
+    export enum MarginMode
+    {
+        DontUse = 0,
+        UseAll = 1,
+        UseProfit = 2,
+        UseLoss = 3,
+    }
+
+    export enum MarginType {
+        Percent = 0,
+        Currency = 1,
+    }
+
+    export enum  AccountType {
+        Mini = 0,
+        Standard = 1,
+        Vip = 2,
     }
 }
