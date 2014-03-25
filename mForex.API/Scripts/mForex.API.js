@@ -1,4 +1,3 @@
-///<reference path="typings/jquery/jquery.d.ts" />
 var mForex;
 (function (mForex) {
     var Connection = (function () {
@@ -255,7 +254,6 @@ var mForex;
     })(mForex.ServerType || (mForex.ServerType = {}));
     var ServerType = mForex.ServerType;
 
-    /** Errors **/
     var TradeError = (function () {
         function TradeError(order, errorCode, mt4ErrorCode) {
             this.order = order;
@@ -316,7 +314,6 @@ var mForex;
     })(mForex.MT4ErrorCode || (mForex.MT4ErrorCode = {}));
     var MT4ErrorCode = mForex.MT4ErrorCode;
 
-    /** Trading **/
     var TradeResponse = (function () {
         function TradeResponse(order) {
             this.order = order;
@@ -359,7 +356,6 @@ var mForex;
     })(mForex.TransactionType || (mForex.TransactionType = {}));
     var TransactionType = mForex.TransactionType;
 
-    /** Candles **/
     var ChartResponse = (function () {
         function ChartResponse() {
         }
@@ -387,7 +383,6 @@ var mForex;
     })(mForex.CandlePeriod || (mForex.CandlePeriod = {}));
     var CandlePeriod = mForex.CandlePeriod;
 
-    /** Ticks **/
     var Tick = (function () {
         function Tick(symbol, bid, ask, time, convRate) {
             this.symbol = symbol;
@@ -417,7 +412,6 @@ var mForex;
     })(mForex.RegistrationAction || (mForex.RegistrationAction = {}));
     var RegistrationAction = mForex.RegistrationAction;
 
-    /** Instrument data **/
     var InstrumentSettings = (function () {
         function InstrumentSettings() {
         }
@@ -469,7 +463,6 @@ var mForex;
     })(mForex.CommissionLots || (mForex.CommissionLots = {}));
     var CommissionLots = mForex.CommissionLots;
 
-    /** Other data **/
     var LoginResponse = (function () {
         function LoginResponse(login, loginStatus) {
             this.login = login;
@@ -501,7 +494,6 @@ var mForex;
     })();
     mForex.HeartbeatResponse = HeartbeatResponse;
 
-    /** Session data **/
     (function (DayOfWeek) {
         DayOfWeek[DayOfWeek["Sunday"] = 0] = "Sunday";
         DayOfWeek[DayOfWeek["Monday"] = 1] = "Monday";
@@ -535,7 +527,6 @@ var mForex;
     })();
     mForex.SessionSchedule = SessionSchedule;
 
-    /** User Settings **/
     var AccountSettings = (function () {
         function AccountSettings() {
         }
@@ -564,4 +555,3 @@ var mForex;
     })(mForex.AccountType || (mForex.AccountType = {}));
     var AccountType = mForex.AccountType;
 })(mForex || (mForex = {}));
-//# sourceMappingURL=mForex.API.js.map
