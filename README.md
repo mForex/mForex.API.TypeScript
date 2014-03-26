@@ -39,7 +39,7 @@ api.open();
 ```
 
 ### Requesting for quotes
-Once connection has been established, all relevant data, but ticks, have been setup and is ready to be registered for. ```mForex.Connection``` provides events which can be subscribed to. However, tick data has to be registered using .requestTickRegistration() with RegistrationAction.Register parameter. For example, to receive and process every EURUSD tick one could:
+Once connection has been established, all relevant data, but ticks, have been setup and is ready to be registered for. ```mForex.Connection``` provides events which can be subscribed to. However, tick data has to be registered using ```.requestTickRegistration()``` with ```RegistrationAction.Register``` parameter. For example, to receive and process every EURUSD tick one could:
 
 ```javascript
 api.requestTickRegistration("EURUSD", RegistrationAction.Register).done( [...] );
